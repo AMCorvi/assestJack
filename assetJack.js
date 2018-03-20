@@ -1,77 +1,106 @@
-let createLogoFile = function(logo) {
+function createLogoFile(logo) {
+  if (typeof logo === !"string") {
+    return console.log("function takes only a single parameter of type string");
+  }
 
   // runs codesuite
   // **function declarations below**
-  createCommandElement(htmlStrings('artboard'), createFilenames(logo));
+  retrieveFile(logo);
+}
 
-  // creates array of filenames for defined logo
-  function createFilenames(logoname) {
-    return [
-      logoname + "_fulllogo_primbg.svg",
-      logoname + "_fulllogo_accentbg.svg",
-      logoname + "_logomark_square_primbg.svg",
-      logoname + "_logomark_rounded_primbg.svg",
-      logoname + "_logomark_circle_primbg.svg",
-      logoname + "_logomark_hexagon_primbg.svg",
-      logoname + "_logomark_primbg.svg",
-      logoname + "_logomark_square_accentbg.svg",
-      logoname + "_logomark_rounded_accentbg.svg",
-      logoname + "_logomark_circle_accentbg.svg",
-      logoname + "_logomark_hexagon_accentbg.svg",
-      logoname + "_logomark_accentbg.svg",
-      logoname + "_wordmark_primbg.svg",
-      logoname + "_wordmark_accentbg.svg"
-    ];
+// creates array of filenames for defined logo
+function createFilenames(logoname) {
+  return [
+    logoname + "_fulllogo_primbg.svg",
+    logoname + "_fulllogo_accentbg.svg",
+    logoname + "_logomark_square_primbg.svg",
+    logoname + "_logomark_rounded_primbg.svg",
+    logoname + "_logomark_circle_primbg.svg",
+    logoname + "_logomark_hexagon_primbg.svg",
+    logoname + "_logomark_primbg.svg",
+    logoname + "_logomark_square_accentbg.svg",
+    logoname + "_logomark_rounded_accentbg.svg",
+    logoname + "_logomark_circle_accentbg.svg",
+    logoname + "_logomark_hexagon_accentbg.svg",
+    logoname + "_logomark_accentbg.svg",
+    logoname + "_wordmark_primbg.svg",
+    logoname + "_wordmark_accentbg.svg",
+    logoname + "_fulllogo_multicolor1.svg",
+    logoname + "_fulllogo_multicolor2.svg",
+    logoname + "_fulllogo_multicolor3.svg",
+    logoname + "_fulllogo_multicolor4.svg",
+    logoname + "_fulllogo_anim.svg"
+  ];
+}
+
+// generate array svg elements
+function svggrab(selector) {
+  // select all svg elements
+  let htmls = [];
+
+  let svgs = document.querySelectorAll(selector);
+
+  // create and return arr of svgcodes
+  for (let x in svgs) htmls.push(svgs[x].innerHTML);
+  return htmls;
+}
+
+// create html element to store information
+function createCommandElement(htmlStrings, filepaths) {
+  let element = document.createElement("p");
+
+  // construct bash commands with html content
+  let bashCommands = [];
+  for (let x in htmlStrings) {
+    bashCommands.push(`echo '${htmlStrings[x]}' > ${filepaths[x]}\n`);
   }
 
-  // generate array svg elements
-  function svggrab(selector) {
-    // select all svg elements
-    let htmls = [];
-    let svgs = document.getElementByClassName(selector);
+  console.log(bashCommands);
 
-    // create and return arr of svgcodes
-    for (let x in svgs) htmls.push(svgs[x].innerHTML);
-    return htmls;
-  }
+  // TODO: ?add click event listener to element so function operates
 
-  // create html element to store information
-  function createCommandElement(htmlStrings, filepaths) {
-    let element = document.createElement("p");
+  // add html content to the element
+  for (let x in bashCommands) element.innerText.concat(" ", bashCommands[x]);
+  element.style.display = "none";
+  document.body.appendChild(element);
 
-    // construct bash commands with html content
-    let bashCommands = [];
-    for (let x in htmlStrings) {
-      bashCommands.push(`echo '${arr[x]} > ${filepaths[x]}\n`);
-    }
+  return element;
+}
 
-    add click event listener to element so function operates
+/*
+   * helper fucntoin that create and downloadable
+   * element and initiates that download
+   */
+function download(filename, text) {
+  // create download
+  let element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+  );
+  element.setAttribute("download", filename);
 
-    // add html content to the element
-    for (let x in arr) element.value.concat(" ", bashCommands[x]);
-    element.style.display = 'none';
-    document.body.appendChild(elememnt);
-  }
+  element.style.display = "none";
 
-  function download(filename, text) {
+  // initiate download
+  element.click();
 
-    let element = document.createElement('a')
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
-    element.setAttribute('download', filename)
+  // remove element from window.document
+  document.body.removeChild(element);
+}
 
-    element.style.display = 'none'
+// intiate whole procedure
+function retrieveFile(logo) {
+  let commandsElement = createCommandElement(
+    svggrab(".two-logos .artboard"),
+    createFilenames(logo)
+  );
 
+  let bashCommands = commandsElement.value;
 
+  // download commandfile
+  download(`${logo}.sh`, bashCommands);
 
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-  }
-};
+  // clean up: remove element from DOM
+  document.body.removeChild(commandsElement);
+}
