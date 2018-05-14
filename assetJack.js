@@ -1,5 +1,13 @@
+/* eslint-disable no-unused-vars */
+
+/**
+ * entrypoint for module.
+ *
+ * @param {string} logo name of logo processed
+ */
 function createLogoFile(logo) {
   if (typeof logo === !"string") {
+    // eslint-disable-next-line no-console
     return console.log("function takes only a single parameter of type string");
   }
 
@@ -8,7 +16,12 @@ function createLogoFile(logo) {
   retrieveFile(logo);
 }
 
-// creates array of filenames for defined logo
+/**
+ * creates array of filenames for defined logo
+ *
+ * @param {string} logoname name of logo being generated
+ * @returns {array} of filenames
+ */
 function createFilenames(logoname) {
   return [
     logoname + "_fulllogo_primbg.svg",
@@ -21,7 +34,7 @@ function createFilenames(logoname) {
     logoname + "_logomark_square_accentbg.svg",
     logoname + "_logomark_rounded_accentbg.svg",
     logoname + "_logomark_circle_accentbg.svg",
-    logoname + "_logomark_hexagon_accentbg.svg",
+    logoname + "_logomark_hexagon_accentbg.ssvg",
     logoname + "_logomark_accentbg.svg",
     logoname + "_wordmark_primbg.svg",
     logoname + "_wordmark_accentbg.svg",
@@ -33,7 +46,12 @@ function createFilenames(logoname) {
   ];
 }
 
-// generate array svg elements
+/**
+ * generate array svg elements
+ *
+ * @param {string} selector DOM querySelection
+ * @returns {array} of htmlString containing svgs
+ */
 function svggrab(selector) {
   // select all svg elements
   let htmls = [];
@@ -45,9 +63,17 @@ function svggrab(selector) {
   return htmls;
 }
 
-// create html element to store information
+/**
+ * // create html element to store information
+ *
+ * @param {array} htmlStrings html strings of svgs
+ * @param {array} filepaths of filenames
+ * @returns {object} html node element
+ */
 function createCommandElement(htmlStrings, filepaths) {
   let element = document.createElement("p");
+
+  console.log(htmlStrings);
 
   // construct bash commands with html content
   let bashCommands = [];
@@ -67,10 +93,14 @@ function createCommandElement(htmlStrings, filepaths) {
   return element;
 }
 
-/*
-   * helper fucntoin that create and downloadable
-   * element and initiates that download
-   */
+
+
+/**
+ * helper fucntoin that create and downloadable element and initiates that download
+ *
+ * @param {string} filename filename of exportable download
+ * @param {string} text string of commands that will be written in file
+ */
 function download(filename, text) {
   // create download
   let element = document.createElement("a");
@@ -89,8 +119,14 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
-// intiate whole procedure
+
+/**
+ * intiate whole procedure
+ *
+ * @param {string} logo
+ */
 function retrieveFile(logo) {
+
   let commandsElement = createCommandElement(
     svggrab(".two-logos .artboard"),
     createFilenames(logo)
