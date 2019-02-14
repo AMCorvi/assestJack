@@ -8,7 +8,7 @@
 function createLogoFile(logo) {
   if (typeof logo === !"string") {
     // eslint-disable-next-line no-console
-    return console.log("function takes only a single parameter of type string");
+    return console.error("function takes only a single parameter of type string");
   }
 
   // runs codesuite
@@ -72,8 +72,8 @@ function svggrab(selector) {
  */
 function createCommandElement(htmlStrings, filepaths) {
   let element = document.createElement("p");
+  element.setAttribute('class', 'commandElement')
 
-  console.log(htmlStrings);
 
   // construct bash commands with html content
   let bashCommands = [];
@@ -81,19 +81,15 @@ function createCommandElement(htmlStrings, filepaths) {
     bashCommands.push(`echo '${htmlStrings[x]}' > ${filepaths[x]}\n`);
   }
 
-  console.log(bashCommands);
-
   // TODO: ?add click event listener to element so function operates
 
   // add html content to the element
-  for (let x in bashCommands) element.innerText.concat(" ", bashCommands[x]);
+  for (let x in bashCommands) element.innerText += bashCommands[x];
   element.style.display = "none";
   document.body.appendChild(element);
 
   return element;
 }
-
-
 
 /**
  * helper fucntoin that create and downloadable element and initiates that download
@@ -104,6 +100,8 @@ function createCommandElement(htmlStrings, filepaths) {
 function download(filename, text) {
   // create download
   let element = document.createElement("a");
+
+  element.setAttribute('class', 'downloadable')
   element.setAttribute(
     "href",
     "data:text/plain;charset=utf-8," + encodeURIComponent(text)
@@ -111,14 +109,15 @@ function download(filename, text) {
   element.setAttribute("download", filename);
 
   element.style.display = "none";
+  const body = document.querySelector('body')
+  body.appendChild(element)
 
   // initiate download
   element.click();
 
   // remove element from window.document
-  document.body.removeChild(element);
+  // document.body.removeChild(element);
 }
-
 
 /**
  * intiate whole procedure
@@ -126,17 +125,16 @@ function download(filename, text) {
  * @param {string} logo
  */
 function retrieveFile(logo) {
-
   let commandsElement = createCommandElement(
     svggrab(".two-logos .artboard"),
     createFilenames(logo)
   );
 
-  let bashCommands = commandsElement.value;
+  let bashCommands = commandsElement.innerText;
 
   // download commandfile
   download(`${logo}.sh`, bashCommands);
 
   // clean up: remove element from DOM
-  document.body.removeChild(commandsElement);
+  // document.body.removeChild(commandsElement);
 }
