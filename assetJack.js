@@ -34,7 +34,7 @@ function createFilenames(logoname) {
     logoname + "_logomark_square_accentbg.svg",
     logoname + "_logomark_rounded_accentbg.svg",
     logoname + "_logomark_circle_accentbg.svg",
-    logoname + "_logomark_hexagon_accentbg.ssvg",
+    logoname + "_logomark_hexagon_accentbg.svg",
     logoname + "_logomark_accentbg.svg",
     logoname + "_wordmark_primbg.svg",
     logoname + "_wordmark_accentbg.svg",
