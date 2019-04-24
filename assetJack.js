@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 /**
  * entrypoint for module.
  *
@@ -58,8 +57,16 @@ function svggrab(selector) {
 
   let svgs = document.querySelectorAll(selector);
 
+
   // create and return arr of svgcodes
-  for (let x in svgs) htmls.push(svgs[x].innerHTML);
+  for (let x in svgs) {
+    console.log(`
+
+    ${svgs[x]}
+
+    `)
+    htmls.push(svgs[x].innerHTML)
+  }
   return htmls;
 }
 
@@ -78,7 +85,12 @@ function createCommandElement(htmlStrings, filepaths) {
   // construct bash commands with html content
   let bashCommands = [];
   for (let x in htmlStrings) {
-    bashCommands.push(`echo '${htmlStrings[x]}' > ${filepaths[x]}\n`);
+    console.log(`
+
+   ${filepaths[x]}: ${htmlStrings[x]}
+
+    `)
+    bashCommands.push(` echo '${htmlStrings[x]}' > ${filepaths[x]} `);
   }
 
   // TODO: ?add click event listener to element so function operates
@@ -92,7 +104,7 @@ function createCommandElement(htmlStrings, filepaths) {
 }
 
 /**
- * helper fucntoin that create and downloadable element and initiates that download
+ * helper function that create and downloadable element and initiates that download
  *
  * @param {string} filename filename of exportable download
  * @param {string} text string of commands that will be written in file
