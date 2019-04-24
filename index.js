@@ -61,7 +61,6 @@ function svggrab(selector) {
 
 
   // create and return arr of svgcodes
-<<<<<<< HEAD:index.js
   for (let x = 0; x < svgs.length; x++) {
     console.log(`
     SVGS SIZE: ${svgs.length}
@@ -70,15 +69,6 @@ function svggrab(selector) {
     EXTRA: ${ htmls.length > 19 ? (svgs[x]) : "NO EXTRA"  }
     `);
     htmls.push(svgs[x].innerHTML);
-=======
-  for (let x in svgs) {
-    console.log(`
-
-    ${svgs[x]}
-
-    `)
-    htmls.push(svgs[x].innerHTML)
->>>>>>> eb9c873012d4ed870ce8218f5f5dc95ab7b8092d:assetJack.js
   }
   return htmls;
 }
@@ -97,14 +87,6 @@ function createCommandElement(htmlStrings, filepaths) {
   // construct bash commands with html content
   let bashCommands = [];
   for (let x in htmlStrings) {
-<<<<<<< HEAD:index.js
-=======
-    console.log(`
-
-   ${filepaths[x]}: ${htmlStrings[x]}
-
-    `)
->>>>>>> eb9c873012d4ed870ce8218f5f5dc95ab7b8092d:assetJack.js
     bashCommands.push(` echo '${htmlStrings[x]}' > ${filepaths[x]} `);
   }
 
