@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 /**
  * entrypoint for module.
  *
@@ -8,7 +7,9 @@
 function createLogoFile(logo) {
   if (typeof logo === !"string") {
     // eslint-disable-next-line no-console
-    return console.error("function takes only a single parameter of type string");
+    return console.error(
+      "function takes only a single parameter of type string"
+    );
   }
 
   // runs codesuite
@@ -59,7 +60,15 @@ function svggrab(selector) {
   let svgs = document.querySelectorAll(selector);
 
   // create and return arr of svgcodes
-  for (let x in svgs) htmls.push(svgs[x].innerHTML);
+  for (let x = 0; x < svgs.length; x++) {
+    console.log(`
+    SVGS SIZE: ${svgs.length}
+    EXTRA: ${ svgs.length > 19 ? (svgs[x]) : "NO EXTRA"  }
+    HTMLS: ${htmls.length}
+    EXTRA: ${ htmls.length > 19 ? (svgs[x]) : "NO EXTRA"  }
+    `);
+    htmls.push(svgs[x].innerHTML);
+  }
   return htmls;
 }
 
@@ -72,19 +81,19 @@ function svggrab(selector) {
  */
 function createCommandElement(htmlStrings, filepaths) {
   let element = document.createElement("p");
-  element.setAttribute('class', 'commandElement')
-
+  element.setAttribute("class", "commandElement");
 
   // construct bash commands with html content
   let bashCommands = [];
   for (let x in htmlStrings) {
-    bashCommands.push(`echo '${htmlStrings[x]}' > ${filepaths[x]}\n`);
+    bashCommands.push(` echo '${htmlStrings[x]}' > ${filepaths[x]} `);
   }
 
   // TODO: ?add click event listener to element so function operates
 
   // add html content to the element
   for (let x in bashCommands) element.innerText += bashCommands[x];
+  r
   element.style.display = "none";
   document.body.appendChild(element);
 
@@ -92,7 +101,7 @@ function createCommandElement(htmlStrings, filepaths) {
 }
 
 /**
- * helper fucntoin that create and downloadable element and initiates that download
+ * helper function that create and downloadable element and initiates that download
  *
  * @param {string} filename filename of exportable download
  * @param {string} text string of commands that will be written in file
@@ -101,7 +110,7 @@ function download(filename, text) {
   // create download
   let element = document.createElement("a");
 
-  element.setAttribute('class', 'downloadable')
+  element.setAttribute("class", "downloadable");
   element.setAttribute(
     "href",
     "data:text/plain;charset=utf-8," + encodeURIComponent(text)
@@ -109,8 +118,8 @@ function download(filename, text) {
   element.setAttribute("download", filename);
 
   element.style.display = "none";
-  const body = document.querySelector('body')
-  body.appendChild(element)
+  const body = document.querySelector("body");
+  body.appendChild(element);
 
   // initiate download
   element.click();
@@ -138,3 +147,10 @@ function retrieveFile(logo) {
   // clean up: remove element from DOM
   // document.body.removeChild(commandsElement);
 }
+
+let svgstrings, lname, selectus, svg, run;
+selectus = ".two-logos .artboard";
+lname = createFilenames("erebus");
+svg = document.querySelectorAll(selectus);
+svgstrings = svggrab(selectus);
+run = createLogoFile.bind(null, "erebus");
