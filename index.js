@@ -62,12 +62,6 @@ function svggrab(selector) {
 
   // create and return arr of svgcodes
   for (let x = 0; x < svgs.length; x++) {
-    console.log(`
-    SVGS SIZE: ${svgs.length}
-    EXTRA: ${ svgs.length > 19 ? (svgs[x]) : "NO EXTRA"  }
-    HTMLS: ${htmls.length}
-    EXTRA: ${ htmls.length > 19 ? (svgs[x]) : "NO EXTRA"  }
-    `);
     htmls.push(svgs[x].innerHTML);
   }
   return htmls;
@@ -80,25 +74,16 @@ function svggrab(selector) {
  * @param {array} filepaths of filenames
  * @returns {object} html node element
  */
-function createCommandElement(htmlStrings, filepaths) {
-  let element = document.createElement("p");
-  element.setAttribute("class", "commandElement");
-
+function createCommandScript(htmlStrings, filepaths) {
   // construct bash commands with html content
-  let bashCommands = [];
+  let bashCommands = ""
   for (let x in htmlStrings) {
-    bashCommands.push(` echo '${htmlStrings[x]}' > ${filepaths[x]} `);
+    bashCommands += (`
+    echo '${htmlStrings[x]}' > ${filepaths[x]}
+    `);
   }
-
-  // TODO: ?add click event listener to element so function operates
-
-  // add html content to the element
-  for (let x in bashCommands) element.innerText += bashCommands[x];
-  r
-  element.style.display = "none";
-  document.body.appendChild(element);
-
-  return element;
+  console.log('This is the value of bashCommands: ', bashCommands)
+  return bashCommands;
 }
 
 /**
@@ -135,15 +120,13 @@ function download(filename, text) {
  * @param {string} logo
  */
 function retrieveFile(logo) {
-  let commandsElement = createCommandElement(
+  let scriptCommands = createCommandScript(
     svggrab(".two-logos .artboard"),
     createFilenames(logo)
   );
 
-  let bashCommands = commandsElement.innerText;
-
   // download commandfile
-  download(`${logo}.sh`, bashCommands);
+  download(`${logo}.sh`, scriptCommands);
 
   // clean up: remove element from DOM
   // document.body.removeChild(commandsElement);
